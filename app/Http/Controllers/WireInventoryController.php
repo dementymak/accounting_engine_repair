@@ -6,6 +6,7 @@ use App\Models\WireInventory;
 use App\Models\WireTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class WireInventoryController extends Controller
 {
@@ -65,7 +66,7 @@ class WireInventoryController extends Controller
             ->with('success', 'Wire updated successfully.');
     }
 
-    public function addStock(Request $request, WireInventory $wire)
+    public function addStock(Request $request, WireInventory $wireInventory)
     {
         $validator = Validator::make($request->all(), [
             'additional_weight' => 'required|numeric|min:0',
@@ -77,45 +78,114 @@ class WireInventoryController extends Controller
                 ->withInput();
         }
 
-        $wire->weight += $request->additional_weight;
-        $wire->save();
+        try {
+            DB::beginTransaction();
 
-        // Record stock addition transaction
-        WireTransaction::create([
-            'wire_id' => $wire->id,
-            'type' => 'income',
-            'amount' => $request->additional_weight,
-        ]);
+            // Update the wire weight using update to avoid creating a new record
+            $wireInventory->update([
+                'weight' => $wireInventory->weight + $request->additional_weight
+            ]);
 
-        return redirect()->route('wire-inventory.index')
-            ->with('success', 'Stock added successfully.');
+            // Record stock addition transaction
+            WireTransaction::create([
+                'wire_id' => $wireInventory->id,
+                'type' => 'income',
+                'amount' => $request->additional_weight,
+            ]);
+
+            DB::commit();
+            return redirect()->route('wire-inventory.index')
+                ->with('success', 'Stock added successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Error adding stock: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
     public function removeStock(Request $request, WireInventory $wire)
     {
-        $validator = Validator::make($request->all(), [
-            'remove_weight' => "required|numeric|min:0|max:{$wire->weight}",
-        ]);
+        try {
+            DB::beginTransaction();
 
-        if ($validator->fails()) {
+            // Get the current weight before validation
+            $currentWeight = $wire->weight ?? 0;
+
+            $validator = Validator::make($request->all(), [
+                'remove_weight' => [
+                    'required',
+                    'numeric',
+                    'min:0',
+                    function ($attribute, $value, $fail) use ($currentWeight) {
+                        if ($value > $currentWeight) {
+                            $fail(__('messages.insufficient_stock', ['available' => $currentWeight]));
+                        }
+                    },
+                ],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            // Update wire weight
+            $wire->update([
+                'weight' => $currentWeight - $request->remove_weight
+            ]);
+
+            // Record stock removal transaction
+            WireTransaction::create([
+                'wire_id' => $wire->id,
+                'type' => 'expenditure',
+                'amount' => -$request->remove_weight,
+            ]);
+
+            DB::commit();
+            return redirect()->route('wire-inventory.index')
+                ->with('success', 'Stock removed successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()
-                ->withErrors($validator)
+                ->with('error', 'Error removing stock: ' . $e->getMessage())
                 ->withInput();
         }
+    }
 
-        $wire->weight -= $request->remove_weight;
-        $wire->save();
+    public function deleteTransaction(WireTransaction $transaction)
+    {
+        try {
+            DB::beginTransaction();
 
-        // Record stock removal transaction
-        WireTransaction::create([
-            'wire_id' => $wire->id,
-            'type' => 'expenditure',
-            'amount' => -$request->remove_weight,
-        ]);
+            // Get the wire inventory
+            $wire = $transaction->wire;
 
-        return redirect()->route('wire-inventory.index')
-            ->with('success', 'Stock removed successfully.');
+            // Reverse the transaction amount in the wire inventory
+            if ($transaction->type === 'income') {
+                $wire->update([
+                    'weight' => $wire->weight - $transaction->amount
+                ]);
+            } else { // expenditure
+                $wire->update([
+                    'weight' => $wire->weight + abs($transaction->amount)
+                ]);
+            }
+
+            // Delete the transaction
+            $transaction->delete();
+
+            DB::commit();
+            return redirect()->route('wire-inventory.index')
+                ->with('success', 'Transaction deleted successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Error deleting transaction: ' . $e->getMessage());
+        }
     }
 } 
+
 
 

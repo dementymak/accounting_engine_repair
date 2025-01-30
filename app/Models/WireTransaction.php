@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\WireInventory;
+use App\Models\EngineRepairCard;
 
 class WireTransaction extends Model
 {
@@ -35,6 +37,6 @@ class WireTransaction extends Model
      */
     public function repair_card(): BelongsTo
     {
-        return $this->belongsTo(RepairCard::class, 'repair_card_id');
+        return $this->belongsTo(EngineRepairCard::class, 'repair_card_id');
     }
 }

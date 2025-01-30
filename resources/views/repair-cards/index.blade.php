@@ -13,7 +13,6 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>{{ __('messages.number') }}</th>
                         <th>{{ __('messages.task_number') }}</th>
                         <th>{{ __('messages.repair_card_number') }}</th>
                         <th>{{ __('messages.created') }}</th>
@@ -28,7 +27,6 @@
                 <tbody>
                     @forelse($repairCards as $card)
                     <tr>
-                        <td>{{ $card->number }}</td>
                         <td>{{ $card->task_number ?? '-' }}</td>
                         <td>{{ $card->repair_card_number ?? '-' }}</td>
                         <td>{{ $card->created_at->format('Y-m-d') }}</td>

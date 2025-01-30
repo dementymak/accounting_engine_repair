@@ -99,7 +99,7 @@
                                             <td>
                                                 @if($transaction->repair_card_id)
                                                     <a href="{{ route('repair-cards.edit', $transaction->repair_card_id) }}">
-                                                        #{{ $transaction->repairCard->number }}
+                                                        #{{ $transaction->repairCard->repair_card_number }}
                                                     </a>
                                                 @else
                                                     -

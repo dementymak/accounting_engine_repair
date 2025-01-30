@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class EngineRepairCard extends Model
 {
     protected $fillable = [
-        'number',
         'task_number',
         'repair_card_number',
         'completed_at',
@@ -58,6 +57,8 @@ class EngineRepairCard extends Model
         });
     }
 } 
+
+
 
 
 

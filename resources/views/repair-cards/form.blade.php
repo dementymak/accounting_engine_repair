@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h5 class="mb-0">{{ isset($repairCard) ? __('messages.edit_repair_card') . ' #' . $repairCard->number : __('messages.new_repair_card') }}</h5>
+        <h5 class="mb-0">{{ isset($repairCard) ? __('messages.edit_repair_card') : __('messages.new_repair_card') }}</h5>
     </div>
     <div class="card-body">
         @if ($errors->any())
@@ -26,21 +26,23 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label">{{ __('messages.number') }} *</label>
-                        <input type="number" name="number" class="form-control" required
-                               value="{{ old('number', $repairCard->number ?? '') }}">
+                        <label for="task_number" class="form-label">{{ __('messages.task_number') }} *</label>
+                        <input type="text" class="form-control @error('task_number') is-invalid @enderror" 
+                               id="task_number" name="task_number" 
+                               value="{{ old('task_number', $repairCard->task_number ?? '') }}" required>
+                        @error('task_number')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">{{ __('messages.task_number') }}</label>
-                        <input type="text" name="task_number" class="form-control"
-                               value="{{ old('task_number', $repairCard->task_number ?? '') }}">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">{{ __('messages.repair_card_number') }}</label>
-                        <input type="text" name="repair_card_number" class="form-control"
+                        <label for="repair_card_number" class="form-label">{{ __('messages.repair_card_number') }}</label>
+                        <input type="text" class="form-control @error('repair_card_number') is-invalid @enderror" 
+                               id="repair_card_number" name="repair_card_number" 
                                value="{{ old('repair_card_number', $repairCard->repair_card_number ?? '') }}">
+                        @error('repair_card_number')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="mb-3">
@@ -239,7 +241,12 @@
                 <div class="form-check">
                     <input type="checkbox" name="completed" class="form-check-input" id="completed"
                            {{ $repairCard->completed_at ? 'checked' : '' }}>
-                    <label class="form-check-label" for="completed">{{ __('messages.mark_completed') }}</label>
+                    <label class="form-check-label" for="completed">
+                        {{ __('messages.mark_completed') }}
+                        @if($repairCard->completed_at)
+                            <small class="text-muted">({{ $repairCard->completed_at->format('Y-m-d H:i') }})</small>
+                        @endif
+                    </label>
                 </div>
             </div>
             @endif
@@ -433,6 +440,7 @@ $(document).ready(function() {
 });
 </script>
 @endpush 
+
 
 
 

@@ -36,6 +36,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/repair-cards/{repairCard}/edit', [EngineRepairCardController::class, 'edit'])->name('repair-cards.edit');
     Route::put('/repair-cards/{repairCard}', [EngineRepairCardController::class, 'update'])->name('repair-cards.update');
     Route::delete('/repair-cards/{repairCard}', [EngineRepairCardController::class, 'destroy'])->name('repair-cards.destroy');
+    Route::post('/repair-cards/{repairCard}/toggle-complete', [EngineRepairCardController::class, 'toggleComplete'])
+        ->name('repair-cards.toggle-complete');
     
     // Wire Inventory
     Route::get('wire-inventory', [WireInventoryController::class, 'index'])->name('wire-inventory.index');
@@ -43,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('wire-inventory/{wireInventory}', [WireInventoryController::class, 'update'])->name('wire-inventory.update');
     Route::post('wire-inventory/{wireInventory}/add-stock', [WireInventoryController::class, 'addStock'])->name('wire-inventory.add-stock');
     Route::post('wire-inventory/{wireInventory}/remove-stock', [WireInventoryController::class, 'removeStock'])->name('wire-inventory.remove-stock');
+    Route::delete('wire-inventory/transactions/{transaction}', [WireInventoryController::class, 'deleteTransaction'])->name('wire-inventory.delete-transaction');
 
     // Scrap Inventory
     Route::get('/scrap', [ScrapInventoryController::class, 'index'])->name('scrap.index');
