@@ -14,6 +14,7 @@ return new class extends Migration
             $table->decimal('weight', 10, 2);
             $table->timestamps();
             $table->unique('diameter');
+            $table->index('weight');
         });
     }
 

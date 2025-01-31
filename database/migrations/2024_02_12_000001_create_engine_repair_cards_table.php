@@ -26,6 +26,10 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
+
+            $table->index('task_number');
+            $table->index('repair_card_number');
+            $table->index('completed_at');
         });
     }
 

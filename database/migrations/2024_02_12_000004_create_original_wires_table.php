@@ -14,6 +14,8 @@ return new class extends Migration
             $table->decimal('diameter', 10, 2);
             $table->integer('wire_count');
             $table->timestamps();
+
+            $table->index('diameter');
         });
     }
 

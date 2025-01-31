@@ -12,6 +12,8 @@ return new class extends Migration
             $table->id();
             $table->decimal('weight', 10, 2);
             $table->timestamps();
+
+            $table->index('weight');
         });
 
         Schema::create('scrap_transactions', function (Blueprint $table) {
@@ -21,6 +23,9 @@ return new class extends Migration
             $table->foreignId('repair_card_id')->nullable()->constrained('engine_repair_cards')->onDelete('set null');
             $table->string('notes')->nullable();
             $table->timestamps();
+
+            $table->index(['type', 'created_at']);
+            $table->index('weight');
         });
     }
 

@@ -6,10 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('wire_transactions', function (Blueprint $table) {
             $table->id();
@@ -19,14 +16,15 @@ return new class extends Migration
             $table->decimal('amount', 10, 2); // Positive for income, negative for expenditure
             $table->text('notes')->nullable();
             $table->timestamps();
+
+            $table->index(['wire_id', 'type']);
+            $table->index('created_at');
+            $table->index('amount');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('wire_transactions');
     }
-};
+}; 
