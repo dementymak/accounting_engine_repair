@@ -189,3 +189,4 @@ class WireInventoryController extends Controller
 
 
 
+
