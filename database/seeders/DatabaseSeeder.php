@@ -20,9 +20,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            AdminSeeder::class,
-            WireInventorySeeder::class,
-            UsersTableSeeder::class,
+            TestDataSeeder::class,
         ]);
     }
 }

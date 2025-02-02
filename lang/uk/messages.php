@@ -3,8 +3,8 @@
 return [
     // Navigation
     'repair_cards' => 'Ремонтні картки',
-    'wire_inventory' => 'Інвентар дроту',
-    'scrap_inventory' => 'Інвентар брухту',
+    'wire_inventory' => 'Облік дроту',
+    'scrap_inventory' => 'Облік відходів',
     'login' => 'Увійти',
     'logout' => 'Вийти',
     
@@ -17,10 +17,67 @@ return [
     'delete' => 'Видалити',
     'notes' => 'Примітки',
     'remove' => 'Видалити',
+    'mm' => 'мм',
+    'kg' => 'кг',
+    
+    // Language
+    'invalid_locale' => 'Недійсна мова',
+    'language_switched' => 'Мову успішно змінено',
+    
+    // Validation
+    'required' => 'Це поле є обов\'язковим',
+    'fill_this_field' => 'Будь ласка, заповніть це поле',
+    'numeric' => 'Будь ласка, введіть число',
+    'min' => [
+        'numeric' => 'Значення має бути не менше :min',
+    ],
+    'max' => [
+        'numeric' => 'Будь ласка, введіть число менше ніж :max',
+    ],
+    'validation_error' => 'Помилка валідації',
+    'invalid_number' => 'Будь ласка, введіть правильне число',
+    
+    // Wire Inventory
+    'add_new_wire' => 'Додати новий дріт',
+    'wire_diameter' => 'Діаметр дроту',
+    'initial_weight' => 'Початкова вага',
+    'add_wire' => 'Додати дріт',
+    'diameter' => 'Діаметр',
+    'weight' => 'Вага',
+    'available_weight' => 'Доступна вага',
+    'add_stock' => 'Додати запас',
+    'remove_stock' => 'Видалити запас',
+    'no_wires' => 'Немає дроту в інвентарі',
+    'add_wire_stock' => 'Додати запас дроту',
+    'adding_stock_for_wire' => 'Додавання запасу для дроту діаметром',
+    'additional_weight' => 'Додаткова вага',
+    'remove_wire_stock' => 'Видалити запас дроту',
+    'removing_stock_for_wire' => 'Видалення запасу для дроту діаметром',
+    'weight_to_remove' => 'Вага для видалення',
+    'wire_history' => 'Історія дроту',
+    'wire_transactions' => 'Транзакції дроту',
+    'transaction_type' => 'Тип транзакції',
+    'income' => 'Надходження',
+    'expenditure' => 'Витрата',
+    'no_transactions' => 'Транзакції не знайдено',
+    'amount' => 'Кількість',
+    'date_time' => 'Дата та час',
+    'date' => 'Дата',
+    'type' => 'Тип',
+    'repair_card' => 'Ремонтна картка',
     
     // Repair Cards
+    'repair_card' => 'Ремонтна картка',
     'new_repair_card' => 'Нова ремонтна картка',
     'edit_repair_card' => 'Редагувати ремонтну картку',
+    'repair_card_created' => 'Ремонтну картку успішно створено',
+    'repair_card_updated' => 'Ремонтну картку успішно оновлено',
+    'repair_card_deleted' => 'Ремонтну картку успішно видалено',
+    'repair_card_completed' => 'Ремонтну картку позначено як завершену',
+    'repair_card_incomplete' => 'Ремонтну картку позначено як незавершену',
+    'error_updating_repair_card' => 'Помилка при оновленні ремонтної картки',
+    'error_deleting_repair_card' => 'Помилка при видаленні ремонтної картки',
+    'error_updating_status' => 'Помилка при оновленні статусу',
     'number' => 'Номер',
     'task_number' => 'Номер завдання',
     'repair_card_number' => 'Номер ремонтної картки',
@@ -36,7 +93,7 @@ return [
     'serial' => 'Послідовне',
     'parallel' => 'Паралельне',
     'total_wire_weight' => 'Загальна вага дроту',
-    'no_repair_cards' => 'Ремонтні картки не знайдено.',
+    'no_repair_cards' => 'Ремонтні картки не знайдено',
     'confirm_delete_repair_card' => 'Ви впевнені, що хочете видалити цю ремонтну картку?',
     'groove_distances' => 'Відстані між пазами',
     'enter_values_separated_by_slash' => 'Введіть значення, розділені косою рискою (/)',
@@ -44,7 +101,7 @@ return [
     'temperature_sensor' => 'Датчик температури',
     'scrap_weight' => 'Вага відходів',
     'enter_scrap_weight' => 'Введіть вагу відходів',
-    'scrap_weight_help' => 'Введіть вагу відходів матеріалу з цього ремонту.',
+    'scrap_weight_help' => 'Введіть вагу відходів матеріалу з цього ремонту',
     'winding_resistance' => 'Опір обмотки',
     'mass_resistance' => 'Опір маси',
     'original_wire_info' => 'Інформація про оригінальний дріт',
@@ -59,32 +116,6 @@ return [
     'available' => 'доступно',
     'max_original_wires' => 'Максимум 10 оригінальних дротів дозволено',
     
-    // Wire Inventory
-    'add_new_wire' => 'Додати новий дріт',
-    'wire_diameter' => 'Діаметр дроту',
-    'initial_weight' => 'Початкова вага',
-    'add_wire' => 'Додати дріт',
-    'diameter' => 'Діаметр',
-    'weight' => 'Вага',
-    'available_weight' => 'Доступна вага',
-    'add_stock' => 'Додати запас',
-    'remove_stock' => 'Видалити запас',
-    'no_wires' => 'Немає дроту в інвентарі.',
-    'add_wire_stock' => 'Додати запас дроту',
-    'adding_stock_for_wire' => 'Додавання запасу для дроту діаметром',
-    'additional_weight' => 'Додаткова вага',
-    'remove_wire_stock' => 'Видалити запас дроту',
-    'removing_stock_for_wire' => 'Видалення запасу для дроту діаметром',
-    'weight_to_remove' => 'Вага для видалення',
-    'wire_history' => 'Історія дроту',
-    'wire_transactions' => 'Транзакції дроту',
-    'transaction_type' => 'Тип транзакції',
-    'income' => 'Надходження',
-    'expenditure' => 'Витрата',
-    'no_transactions' => 'Транзакції не знайдено.',
-    'amount' => 'Кількість',
-    'date_time' => 'Дата та час',
-    
     // Scrap Inventory
     'current_scrap_weight' => 'Поточна вага брухту',
     'add_initial_balance' => 'Додати початковий баланс',
@@ -93,10 +124,52 @@ return [
     'initial_balance' => 'Початковий баланс',
     'from_repair_card' => 'З ремонтної картки',
     'write_off' => 'Списання',
-    'type' => 'Тип',
-    'date' => 'Дата',
     'scrap_inventory_management' => 'Управління інвентарем брухту',
+    'confirm_delete_transaction' => 'Ви впевнені, що хочете видалити цю транзакцію?',
+    'insufficient_stock' => 'Недостатньо матеріалу на складі',
+    'insufficient_stock_for_completion' => 'Недостатньо дроту діаметром :diameter мм для завершення ремонту (потрібно: :required кг, доступно: :available кг)',
+    'reservation_not_found' => 'Не знайдено резервацію дроту для цієї карти ремонту',
+    'stock_added' => 'Запас успішно додано',
+    'stock_removed' => 'Запас успішно видалено',
+    'transaction_deleted' => 'Транзакцію успішно видалено',
+    'wire_added' => 'Дріт успішно додано',
+    'previous_repair_card' => 'Попередня карта ремонту',
+    'repair_card_uncompleted' => 'Карту ремонту позначено як незавершену',
+    'error_updating_repair_card' => 'Помилка оновлення карти ремонту',
+    'repair_card_created' => 'Карту ремонту створено',
+    'repair_card_updated' => 'Карту ремонту оновлено',
+    'repair_card_deleted' => 'Карту ремонту видалено',
+    'error_deleting_repair_card' => 'Помилка видалення карти ремонту',
+    'min' => [
+        'numeric' => 'Значення має бути не менше :min',
+    ],
+    'select_wire' => 'Виберіть дріт',
+    'add_wire' => 'Додати дріт',
+    'wire_usage' => 'Використання дроту',
+    'total_wire_weight' => 'Загальна вага дроту',
+    'mm' => 'мм',
+    'kg' => 'кг',
+    'available' => 'доступно',
+    'warning' => 'Попередження',
+    'unlock_editing' => 'Розблокувати редагування',
+    'completed_edit_warning' => 'Ви намагаєтесь редагувати завершені записи використання дроту. Це може призвести до невідповідностей в обліку.',
+    'completed_edit_confirmation' => 'Ви впевнені, що хочете продовжити?',
+    'confirm_unlock' => 'Підтвердити розблокування',
+    
+    // Repair Card Status
+    'repair_card_completed' => 'Картку ремонту позначено як виконану',
+    'repair_card_uncompleted' => 'Позначку про виконання знято з картки ремонту',
+    'error_updating_status' => 'Помилка при оновленні статусу картки ремонту',
+    'insufficient_stock_for_completion' => 'Недостатньо дроту діаметром :diameter мм (потрібно: :required кг, доступно: :available кг)',
+    'reservation_not_found' => 'Не знайдено резервацію дроту',
 ]; 
+
+
+
+
+
+
+
 
 
 

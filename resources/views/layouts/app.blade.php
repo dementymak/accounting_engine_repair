@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Engine Repair Management</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -57,9 +58,9 @@
                     <!-- Language Switcher -->
                     <li class="nav-item language-switcher me-3">
                         <div class="btn-group" role="group">
-                            <a href="{{ url('language/en') }}" class="nav-link {{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
-                            <a href="{{ url('language/uk') }}" class="nav-link {{ app()->getLocale() == 'uk' ? 'active' : '' }}">UK</a>
-                            <a href="{{ url('language/pl') }}" class="nav-link {{ app()->getLocale() == 'pl' ? 'active' : '' }}">PL</a>
+                            <a href="{{ route('language.switch', 'en') }}" class="nav-link {{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
+                            <a href="{{ route('language.switch', 'uk') }}" class="nav-link {{ app()->getLocale() == 'uk' ? 'active' : '' }}">UK</a>
+                            <a href="{{ route('language.switch', 'pl') }}" class="nav-link {{ app()->getLocale() == 'pl' ? 'active' : '' }}">PL</a>
                         </div>
                     </li>
                     @guest
@@ -110,9 +111,42 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Custom validation messages -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set custom validation messages for all required inputs
+            document.querySelectorAll('input[required], select[required], textarea[required]').forEach(function(element) {
+                element.oninvalid = function(e) {
+                    if (e.target.validity.valueMissing) {
+                        e.target.setCustomValidity('{{ __('messages.fill_this_field') }}');
+                    }
+                };
+                element.oninput = function(e) {
+                    e.target.setCustomValidity('');
+                };
+            });
+
+            // Set custom validation messages for number inputs
+            document.querySelectorAll('input[type="number"]').forEach(function(element) {
+                element.addEventListener('invalid', function(e) {
+                    if (e.target.validity.badInput) {
+                        e.target.setCustomValidity('{{ __('messages.numeric') }}');
+                    }
+                });
+            });
+        });
+    </script>
     @stack('scripts')
 </body>
 </html> 
+
+
+
+
+
+
+
 
 
 

@@ -13,79 +13,63 @@ class ScrapInventoryController extends Controller
     public function index()
     {
         $scrapInventory = ScrapInventory::first();
-        $transactions = ScrapTransaction::with('repairCard')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
+        $transactions = ScrapTransaction::orderBy('created_at', 'desc')->get();
         return view('scrap.index', compact('scrapInventory', 'transactions'));
     }
 
-    public function addInitialBalance(Request $request)
+    public function addInitial(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'weight' => 'required|numeric|min:0',
-            'notes' => 'nullable|string',
+            'notes' => 'nullable|string'
         ]);
 
-        DB::beginTransaction();
-        try {
-            $scrapInventory = ScrapInventory::firstOrCreate(
+        DB::transaction(function () use ($validated) {
+            $scrap = ScrapInventory::firstOrCreate(
                 [],
                 ['weight' => 0]
             );
 
+            $scrap->weight += $validated['weight'];
+            $scrap->save();
+
             ScrapTransaction::create([
                 'type' => 'initial',
-                'weight' => $request->weight,
-                'notes' => $request->notes,
+                'weight' => $validated['weight'],
+                'notes' => $validated['notes'] ?? null
             ]);
+        });
 
-            $scrapInventory->increment('weight', $request->weight);
-            
-            DB::commit();
-            return redirect()->route('scrap.index')
-                ->with('success', 'Initial balance added successfully.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error adding initial scrap balance: ' . $e->getMessage());
-            return redirect()->back()
-                ->with('error', 'Error adding initial balance: ' . $e->getMessage())
-                ->withInput();
-        }
+        return redirect()->route('scrap.index');
     }
 
-    public function writeOff(Request $request)
+    public function writeoff(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'weight' => 'required|numeric|min:0',
-            'notes' => 'nullable|string',
+            'notes' => 'nullable|string'
         ]);
 
-        DB::beginTransaction();
-        try {
-            $scrapInventory = ScrapInventory::firstOrFail();
+        $scrap = ScrapInventory::firstOrCreate(
+            [],
+            ['weight' => 0]
+        );
 
-            if ($scrapInventory->weight < $request->weight) {
-                throw new \Exception('Insufficient scrap weight available for write-off.');
-            }
+        if ($scrap->weight < $validated['weight']) {
+            return back()->withErrors(['weight' => 'Insufficient scrap available.']);
+        }
+
+        DB::transaction(function () use ($scrap, $validated) {
+            $scrap->weight -= $validated['weight'];
+            $scrap->save();
 
             ScrapTransaction::create([
                 'type' => 'writeoff',
-                'weight' => -$request->weight,
-                'notes' => $request->notes,
+                'weight' => -$validated['weight'],
+                'notes' => $validated['notes'] ?? null
             ]);
+        });
 
-            $scrapInventory->decrement('weight', $request->weight);
-            
-            DB::commit();
-            return redirect()->route('scrap.index')
-                ->with('success', 'Scrap written off successfully.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error writing off scrap: ' . $e->getMessage());
-            return redirect()->back()
-                ->with('error', 'Error writing off scrap: ' . $e->getMessage())
-                ->withInput();
-        }
+        return redirect()->route('scrap.index');
     }
 } 

@@ -17,6 +17,25 @@ return [
     'delete' => 'Usuń',
     'notes' => 'Notatki',
     'remove' => 'Usuń',
+    'mm' => 'mm',
+    'kg' => 'kg',
+    
+    // Language
+    'invalid_locale' => 'Nieprawidłowy język',
+    'language_switched' => 'Język został zmieniony pomyślnie',
+    
+    // Validation
+    'required' => 'To pole jest wymagane',
+    'fill_this_field' => 'Proszę wypełnić to pole',
+    'numeric' => 'Proszę wprowadzić liczbę',
+    'min' => [
+        'numeric' => 'Proszę wprowadzić liczbę większą niż :min',
+    ],
+    'max' => [
+        'numeric' => 'Proszę wprowadzić liczbę mniejszą niż :max',
+    ],
+    'validation_error' => 'Błąd walidacji',
+    'invalid_number' => 'Proszę wprowadzić prawidłową liczbę',
     
     // Repair Cards
     'new_repair_card' => 'Nowa karta naprawy',

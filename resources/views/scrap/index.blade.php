@@ -14,7 +14,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h6 class="card-title">{{ __('messages.current_scrap_weight') }}</h6>
-                                    <h3>{{ $scrapInventory ? number_format($scrapInventory->weight, 2) : '0.00' }} kg</h3>
+                                    <h3>{{ $scrapInventory ? number_format($scrapInventory->weight, 2) : '0.00' }} {{ __('messages.kg') }}</h3>
                                 </div>
                             </div>
                         </div>
@@ -30,7 +30,7 @@
                                     <form action="{{ route('scrap.add-initial') }}" method="POST">
                                         @csrf
                                         <div class="mb-3">
-                                            <label for="weight" class="form-label">{{ __('messages.weight') }} (kg)</label>
+                                            <label for="weight" class="form-label">{{ __('messages.weight') }} ({{ __('messages.kg') }})</label>
                                             <input type="number" step="0.01" min="0" class="form-control" id="weight" name="weight" required>
                                         </div>
                                         <div class="mb-3">
@@ -52,7 +52,7 @@
                                     <form action="{{ route('scrap.writeoff') }}" method="POST">
                                         @csrf
                                         <div class="mb-3">
-                                            <label for="weight" class="form-label">{{ __('messages.weight_to_remove') }} (kg)</label>
+                                            <label for="weight" class="form-label">{{ __('messages.weight_to_remove') }} ({{ __('messages.kg') }})</label>
                                             <input type="number" step="0.01" min="0" class="form-control" id="weight" name="weight" required>
                                         </div>
                                         <div class="mb-3">
@@ -95,7 +95,7 @@
                                                     <span class="badge bg-danger">{{ __('messages.write_off') }}</span>
                                                 @endif
                                             </td>
-                                            <td>{{ number_format($transaction->weight, 2) }} kg</td>
+                                            <td>{{ number_format($transaction->weight, 2) }} {{ __('messages.kg') }}</td>
                                             <td>
                                                 @if($transaction->repair_card_id)
                                                     <a href="{{ route('repair-cards.edit', $transaction->repair_card_id) }}">

@@ -18,10 +18,12 @@ class WireTransaction extends Model
         'type',
         'amount',
         'notes',
+        'completed_at'
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'completed_at' => 'datetime'
     ];
 
     /**

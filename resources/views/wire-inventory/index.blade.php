@@ -11,12 +11,24 @@
                 <form action="{{ route('wire-inventory.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label">{{ __('messages.wire_diameter') }} (mm)</label>
-                        <input type="number" step="0.01" name="diameter" class="form-control" required>
+                        <label class="form-label">{{ __('messages.wire_diameter') }} ({{ __('messages.mm') }})</label>
+                        <input type="number" 
+                               step="0.01" 
+                               name="diameter" 
+                               class="form-control" 
+                               required
+                               oninvalid="this.setCustomValidity('{{ __('messages.fill_this_field') }}')"
+                               oninput="this.setCustomValidity('')">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">{{ __('messages.initial_weight') }} (kg)</label>
-                        <input type="number" step="0.01" name="weight" class="form-control" required>
+                        <label class="form-label">{{ __('messages.initial_weight') }} ({{ __('messages.kg') }})</label>
+                        <input type="number" 
+                               step="0.01" 
+                               name="weight" 
+                               class="form-control" 
+                               required
+                               oninvalid="this.setCustomValidity('{{ __('messages.fill_this_field') }}')"
+                               oninput="this.setCustomValidity('')">
                     </div>
                     <button type="submit" class="btn btn-primary">{{ __('messages.add_wire') }}</button>
                 </form>
@@ -42,8 +54,8 @@
                         <tbody>
                             @foreach($wires as $wire)
                             <tr>
-                                <td>{{ number_format($wire->diameter, 2) }} mm</td>
-                                <td>{{ number_format($wire->weight, 2) }} kg</td>
+                                <td>{{ number_format($wire->diameter, 2) }} {{ __('messages.mm') }}</td>
+                                <td>{{ number_format($wire->weight, 2) }} {{ __('messages.kg') }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm" 
                                             data-bs-toggle="modal" 
@@ -60,61 +72,84 @@
                 </div>
 
                 <!-- Wire Transactions History -->
-                <h5 class="mt-4">{{ __('messages.wire_transactions') }}</h5>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>{{ __('messages.date') }}</th>
-                                <th>{{ __('messages.wire_diameter') }}</th>
-                                <th>{{ __('messages.type') }}</th>
-                                <th>{{ __('messages.amount') }}</th>
-                                <th>{{ __('messages.repair_card') }}</th>
-                                <th>{{ __('messages.notes') }}</th>
-                                <th>{{ __('messages.actions') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($wireTransactions as $transaction)
-                            <tr>
-                                <td>{{ $transaction->created_at->format('Y-m-d H:i:s') }}</td>
-                                <td>{{ number_format($transaction->wire->diameter, 2) }} mm</td>
-                                <td>
-                                    @if($transaction->type === 'income')
-                                        <span class="text-success">{{ __('messages.income') }}</span>
-                                    @else
-                                        <span class="text-danger">{{ __('messages.expenditure') }}</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($transaction->type === 'income')
-                                        <span class="text-success">+{{ number_format($transaction->amount, 2) }} kg</span>
-                                    @else
-                                        <span class="text-danger">{{ number_format($transaction->amount, 2) }} kg</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($transaction->repair_card)
-                                        #{{ $transaction->repair_card->repair_card_number }}
-                                    @endif
-                                </td>
-                                <td>{{ $transaction->notes }}</td>
-                                <td>
-                                    <form action="{{ route('wire-inventory.delete-transaction', $transaction) }}" 
-                                          method="POST" style="display: inline-block;"
-                                          onsubmit="return confirm('{{ __('messages.confirm_delete_transaction') }}');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    {{ $wireTransactions->links() }}
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">{{ __('messages.wire_transactions') }}</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach($wireTransactions as $transaction)
+                            <div class="transaction-item border-bottom py-2">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <strong>{{ $transaction->created_at->format('Y-m-d H:i') }}</strong>
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{ number_format($transaction->wire->diameter, 2) }} {{ __('messages.mm') }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        @if($transaction->type === 'income')
+                                            <span class="badge bg-success">{{ __('messages.income') }}</span>
+                                        @else
+                                            <span class="badge bg-danger">{{ __('messages.expenditure') }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-2">
+                                        @if($transaction->type === 'income')
+                                            <span class="text-success">+{{ number_format($transaction->amount, 2) }} {{ __('messages.kg') }}</span>
+                                        @else
+                                            <span class="text-danger">{{ number_format($transaction->amount, 2) }} {{ __('messages.kg') }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-2">
+                                        @if($transaction->repair_card)
+                                            <a href="{{ route('repair-cards.edit', $transaction->repair_card->id) }}" class="text-decoration-none">
+                                                #{{ $transaction->repair_card->repair_card_number }}
+                                            </a>
+                                        @else
+                                            -
+                                        @endif
+                                    </div>
+                                    <div class="col-md-1 text-end">
+                                        <form action="{{ route('wire-inventory.delete-transaction', $transaction) }}" 
+                                              method="POST" 
+                                              class="d-inline-block"
+                                              onsubmit="return confirm('{{ __('messages.confirm_delete_transaction') }}');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-md-12 text-muted">
+                                        {{ $transaction->notes ?: '-' }}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+
+                        @if($wireTransactions->hasPages())
+                            <div class="d-flex flex-column align-items-center mt-3">
+                                <div class="text-muted mb-2">
+                                    {{ __('messages.showing_results', [
+                                        'from' => $wireTransactions->firstItem(),
+                                        'to' => $wireTransactions->lastItem(),
+                                        'total' => $wireTransactions->total()
+                                    ]) }}
+                                </div>
+                                <div class="d-flex flex-wrap justify-content-center gap-1">
+                                    @for($i = 1; $i <= $wireTransactions->lastPage(); $i++)
+                                        <a href="{{ $wireTransactions->url($i) }}" 
+                                           class="btn btn-sm {{ $i == $wireTransactions->currentPage() ? 'btn-primary' : 'btn-outline-primary' }}">
+                                            {{ $i }}
+                                        </a>
+                                    @endfor
+                                </div>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,9 +167,9 @@
             <form id="addStockForm" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <p>{{ __('messages.adding_stock_for_wire') }}: <span id="addStockDiameter"></span>mm</p>
+                    <p>{{ __('messages.adding_stock_for_wire') }}: <span id="addStockDiameter"></span> {{ __('messages.mm') }}</p>
                     <div class="mb-3">
-                        <label class="form-label">{{ __('messages.additional_weight') }} (kg)</label>
+                        <label class="form-label">{{ __('messages.additional_weight') }} ({{ __('messages.kg') }})</label>
                         <input type="number" step="0.01" name="additional_weight" class="form-control" required min="0">
                     </div>
                 </div>
@@ -158,10 +193,10 @@
             <form id="removeStockForm" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <p>{{ __('messages.removing_stock_for_wire') }}: <span id="removeStockDiameter"></span>mm</p>
-                    <p>{{ __('messages.available_weight') }}: <span id="removeStockAvailable"></span>kg</p>
+                    <p>{{ __('messages.removing_stock_for_wire') }}: <span id="removeStockDiameter"></span> {{ __('messages.mm') }}</p>
+                    <p>{{ __('messages.available_weight') }}: <span id="removeStockAvailable"></span> {{ __('messages.kg') }}</p>
                     <div class="mb-3">
-                        <label class="form-label">{{ __('messages.weight_to_remove') }} (kg)</label>
+                        <label class="form-label">{{ __('messages.weight_to_remove') }} ({{ __('messages.kg') }})</label>
                         <input type="number" step="0.01" name="remove_weight" class="form-control" required>
                     </div>
                 </div>
@@ -297,7 +332,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+@endpush
+
+@push('styles')
+<style>
+.transaction-item {
+    transition: background-color 0.2s;
+}
+
+.transaction-item:hover {
+    background-color: rgba(0,0,0,0.02);
+}
+
+.pagination {
+    margin: 0;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+</style>
 @endpush 
+
+
 
 
 

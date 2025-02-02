@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WireInventory extends Model
 {
+    use HasFactory;
+
     protected $table = 'wire_inventory';
 
     protected $fillable = [
@@ -36,7 +39,24 @@ class WireInventory extends Model
     {
         return $this->hasMany(WireTransaction::class, 'wire_id');
     }
+
+    /**
+     * Get the reservations for the wire.
+     */
+    public function reservations()
+    {
+        return $this->hasMany(WireReservation::class);
+    }
+
+    /**
+     * Get the available weight (excluding reservations)
+     */
+    public function getAvailableWeightAttribute()
+    {
+        return $this->weight - $this->reservations()->sum('reserved_weight');
+    }
 } 
+
 
 
 

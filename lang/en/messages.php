@@ -17,6 +17,25 @@ return [
     'delete' => 'Delete',
     'notes' => 'Notes',
     'remove' => 'Remove',
+    'mm' => 'mm',
+    'kg' => 'kg',
+    
+    // Language
+    'invalid_locale' => 'Invalid language',
+    'language_switched' => 'Language changed successfully',
+    
+    // Validation
+    'required' => 'This field is required',
+    'fill_this_field' => 'Please fill out this field',
+    'numeric' => 'Please enter a number',
+    'min' => [
+        'numeric' => 'Please enter a number greater than :min',
+    ],
+    'max' => [
+        'numeric' => 'Please enter a number less than :max',
+    ],
+    'validation_error' => 'Validation Error',
+    'invalid_number' => 'Please enter a valid number',
     
     // Repair Cards
     'new_repair_card' => 'New Repair Card',
